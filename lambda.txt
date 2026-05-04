@@ -6,7 +6,7 @@ def lambda_handler(event, context):
         'body': json.dumps('Hello from Lambda!')
     }
 
-
+--------------------------------------------------------------
 import json
 
 def lambda_handler(event, context):
@@ -21,6 +21,7 @@ def lambda_handler(event, context):
             'sum': result
         })
     }
+-----------------------------------------------
 test input:
 {
   "num1": 10,
