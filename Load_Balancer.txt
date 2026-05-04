@@ -1,0 +1,108 @@
+1. EC2 INSTANCE 1 (webserver-1)
+🔹 Configuration
+Name → webserver-1
+AMI → Amazon Linux 2
+Instance Type → t2.micro
+🔹 Security Group
+SSH (22) → My IP
+HTTP (80) → Anywhere (0.0.0.0/0)
+🔹 Commands (VERY IMPORTANT ✅)
+-------------------
+yum update -y
+yum install httpd -y
+systemctl start httpd
+systemctl enable httpd
+echo "This is Server 1" > /var/www/html/index.html
+-------------------------------------
+✅ 2. EC2 INSTANCE 2 (webserver-2)
+🔹 Configuration
+Name → webserver-2
+Same as above
+🔹 Commands
+------------
+yum update -y
+yum install httpd -y
+systemctl start httpd
+systemctl enable httpd
+echo "This is Server 2" > /var/www/html/index.html
+------------------------
+✅ 3. SECURITY GROUP (LOAD BALANCER)
+🔹 Create SG → lb-sg
+HTTP (80) → Anywhere
+HTTPS (443) → Optional
+✅ 4. APPLICATION LOAD BALANCER (ALB)
+🔹 Basic Setup
+Name → my-alb
+Scheme → Internet-facing
+IP → IPv4
+🔹 Listener
+HTTP → Port 80
+🔹 Network
+Select VPC
+Select 2 subnets
+🔹 Security Group
+Select → lb-sg
+✅ 5. TARGET GROUP
+🔹 Create Target Group
+Name → web-servers-tg
+Target type → Instance
+Protocol → HTTP
+Port → 80
+🔹 Register Targets
+Add:
+webserver-1
+webserver-2
+✅ 6. VERIFY LOAD BALANCER
+🔹 Steps
+Copy ALB DNS
+Open in browser
+🔹 Output
+Shows:
+“This is Server 1” OR
+“This is Server 2”
+
+👉 Refresh → traffic switches
+
+✅ 7. CREATE AMI (VERY IMPORTANT)
+🔹 Steps
+EC2 → Select instance
+Actions → Image → Create Image
+🔹 Name
+my-webserver-AMI
+✅ 8. LAUNCH TEMPLATE
+🔹 Configuration
+Name → my-launch-template
+AMI → created AMI
+Instance → t2.micro
+Key Pair → select
+🔹 Security Group
+Allow HTTP (80)
+✅ 9. AUTO SCALING GROUP (ASG)
+🔹 Basic
+Name → webserver-asg
+Launch Template → my-launch-template
+🔹 Network Settings
+VPC → Default
+Subnets → All
+🔹 Attach Load Balancer
+Select existing ALB
+🔹 Health Check
+Type → HTTP
+Grace Period → 300 sec
+🔹 Capacity Settings
+Desired → 2
+Min → 1
+Max → 4
+✅ 10. VERIFY AUTO SCALING
+🔹 Check
+Target group → Healthy instances
+ASG → Instances running
+🔹 Test
+Terminate 1 instance
+👉 New instance auto-created ✅
+✅ 11. FINAL TEST
+Open ALB DNS
+Refresh multiple times
+
+👉 Load balancing works
+👉 Auto scaling works

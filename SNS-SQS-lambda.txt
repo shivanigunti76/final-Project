@@ -1,0 +1,65 @@
+lambda-sqs
+import json
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        print("Message received from SQS:")
+        print(record['body'])
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Message processed successfully')
+    }
+
+------------------------------------------------------
+lambda-s3
+import json
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        # SQS message body (SNS wraps S3 event inside it)
+        body = json.loads(record['body'])
+
+        # If message comes from SNS
+        if 'Message' in body:
+            message = json.loads(body['Message'])
+        else:
+            message = body
+
+        # Extract S3 event details
+        for rec in message['Records']:
+            bucket = rec['s3']['bucket']['name']
+            key = rec['s3']['object']['key']
+
+            print("Bucket:", bucket)
+            print("File:", key)
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('S3 event processed from SQS')
+    }
+------------------------------------------------------
+sns-access policy
+{
+  "Version": "2012-10-17",
+  "Id": "S3-SNS-Policy",
+  "Statement": [
+    {
+      "Sid": "AllowS3ToPublishToSNS",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Action": "SNS:Publish",
+      "Resource": "YOUR_SNS_TOPIC_ARN",
+      "Condition": {
+        "ArnLike": {
+          "aws:SourceArn": "YOUR_S3_BUCKET_ARN"
+        },
+        "StringEquals": {
+          "aws:SourceAccount": "YOUR_ACCOUNT_ID"
+        }
+      }
+    }
+  ]
+}

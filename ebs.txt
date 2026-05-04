@@ -1,0 +1,72 @@
+1. OPEN ELASTIC BEANSTALK
+AWS Console → Elastic Beanstalk
+Click → Create Application
+
+2. CREATE APPLICATION
+🔹 Configuration
+Application Name → MyApp
+Description → optional
+Create
+
+3. CREATE ENVIRONMENT
+🔹 Choose
+Environment Type → Web Server Environment
+
+👉 Click Select
+
+4. CONFIGURE ENVIRONMENT
+🔹 Basic
+Environment Name → myapp-env
+🔹 Platform
+
+Choose based on your app:
+
+Java → Tomcat (.war)
+Python → Python
+Node.js → Node
+🔹 Upload Code
+Select → Upload your code
+Upload:
+.war (Java) OR
+.zip (Python/Node)
+5. SERVICE ACCESS (VERY IMPORTANT)
+🔹 Settings
+Service Role → LabRole
+EC2 Instance Profile → LabInstanceProfile
+Key Pair → optional
+ 6. NETWORK CONFIGURATION
+🔹 Settings
+VPC → Default
+Subnets → Select available
+Public IP → Enabled ✅
+ 7. INSTANCE & SCALING
+🔹 Instance
+Type → t2.micro
+🔹 Scaling
+Min → 1
+Max → 2
+🔹 Load Balancer
+Enable → ✅ (recommended)
+✅ 8. REVIEW & CREATE
+Click → Review
+Click → Create
+
+👉 AWS will automatically create:
+
+EC2
+Load Balancer
+Auto Scaling
+Security Groups
+⏳ 9. DEPLOYMENT (WAIT)
+Takes 3–5 minutes
+Status → Green = Success ✅
+🌐 10. ACCESS APPLICATION
+🔹 Steps
+Go to Environment
+Copy URL
+
+👉 Example:
+
+http://myapp-env.eba-xyz.us-east-1.elasticbeanstalk.com
+
+👉 Open in browser → App runs 🎉
