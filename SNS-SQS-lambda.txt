@@ -63,3 +63,30 @@ sns-access policy
     }
   ]
 }
+
+
+
+
+
+---------------------------
+worked sqs code
+{
+  "Version": "2012-10-17",
+  "Id": "AllowSNSToSendMessage",
+  "Statement": [
+    {
+      "Sid": "Allow-SNS-SendMessage",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "sns.amazonaws.com"
+      },
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:us-east-1:640270804884:sqs-internal",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "arn:aws:sns:us-east-1:640270804884:internal-2"
+        }
+      }
+    }
+  ]
+}
