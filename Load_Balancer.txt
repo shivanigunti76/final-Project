@@ -12,7 +12,7 @@ yum update -y
 yum install httpd -y
 systemctl start httpd
 systemctl enable httpd
-echo "This is Server 1" > /var/www/html/index.html
+echo "This is Server 1" | sudo tee /var/www/html/index.html
 -------------------------------------
 ✅ 2. EC2 INSTANCE 2 (webserver-2)
 🔹 Configuration
@@ -24,12 +24,16 @@ yum update -y
 yum install httpd -y
 systemctl start httpd
 systemctl enable httpd
-echo "This is Server 2" > /var/www/html/index.html
+echo "This is Server 2" | sudo /var/www/html/index.html
 ------------------------
 ✅ 3. SECURITY GROUP (LOAD BALANCER)
 🔹 Create SG → lb-sg
+inbound
 HTTP (80) → Anywhere
-HTTPS (443) → Optional
+----------------------------------------------------
+target group:
+instance name after select 2 instances then click that 
+----------------------------------------------------
 ✅ 4. APPLICATION LOAD BALANCER (ALB)
 🔹 Basic Setup
 Name → my-alb
@@ -39,7 +43,7 @@ IP → IPv4
 HTTP → Port 80
 🔹 Network
 Select VPC
-Select 2 subnets
+Select all subnets
 🔹 Security Group
 Select → lb-sg
 ✅ 5. TARGET GROUP
@@ -52,6 +56,7 @@ Port → 80
 Add:
 webserver-1
 webserver-2
+--------rather select already created tg
 ✅ 6. VERIFY LOAD BALANCER
 🔹 Steps
 Copy ALB DNS
