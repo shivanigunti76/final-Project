@@ -1,0 +1,30 @@
+EFS:
+Launch ec2 instace
+	name, linum ami, t2.micro,keypair,SG->Vpc default,subnet->east-1a,add SG -> NFS->Anywhere
+LAunch
+
+Launch ec2-2
+same all except subnet->east-1b
+
+EFS->
+click create->name
+	vpc(default)
+	customize->next->subnets 1a,1a remaining remove
+ec2-1:
+connect->ssh copy ->powershell->paste->sudo su
+	 mkdir efs
+ 	yum install -y amazon-efs-uFls
+ 	ls
+ec2-2:
+connect->ssh copy ->powershell->paste->sudo su
+	 mkdir efs
+ 	yum install -y amazon-efs-uFls
+ 	ls
+EFS->Attach->mount via dns
+	copy command
+	paste it in 2 terminals-ec2-1 and ec2-2
+ec21-> cd efs
+	touch hello.txt
+	ls
+ec22->cd efs
+	ls-->

@@ -1,72 +1,45 @@
-1. OPEN ELASTIC BEANSTALK
-AWS Console → Elastic Beanstalk
-Click → Create Application
+Instance
+Amazon Linux
 
-2. CREATE APPLICATION
-🔹 Configuration
-Application Name → MyApp
-Description → optional
-Create
+ebs
+	create volu,me-->gp3,20,AZ-us-east-1a(Should be same as ec2)
+	Actions->Attach Volume-> instance give then device name as dev/xvdbf
 
-3. CREATE ENVIRONMENT
-🔹 Choose
-Environment Type → Web Server Environment
+lsblk
+sudo fdisk /dev/xvdbf
+m n p e e e w
+sudo lsblk -fs /dev/xvdbf1
+sudo mkfs.xfs /dev/xvdbf1
 
-👉 Click Select
+sudo mkdir /mnt/shivani
+sudo mount /dev/xvdbf1 /mnt/Shivani
+sudo df -h
+sudo blkid /dev/xvdbf1
+nano /etc/fstab
+UUID=ec0f0354-8ff4-44a2-9f71-f32f781e73a2 /mnt/Shivani xfs defaults,nofail 0 0
+Ctrl+o enter  x
+sudo mount -a
+cd /mnt/Shivani
+sudo touch f1
+reboot
+cd /mnt/Shivani
+ls
+f1 should appear
 
-4. CONFIGURE ENVIRONMENT
-🔹 Basic
-Environment Name → myapp-env
-🔹 Platform
+then snapshot
+volume
+actions create snapshot
+then snapshot -> copy snap shot choose dest west 2
+then move to that region see the snapshot
+then create volume from actions create volume
 
-Choose based on your app:
-
-Java → Tomcat (.war)
-Python → Python
-Node.js → Node
-🔹 Upload Code
-Select → Upload your code
-Upload:
-.war (Java) OR
-.zip (Python/Node)
-5. SERVICE ACCESS (VERY IMPORTANT)
-🔹 Settings
-Service Role → LabRole
-EC2 Instance Profile → LabInstanceProfile
-Key Pair → optional
- 6. NETWORK CONFIGURATION
-🔹 Settings
-VPC → Default
-Subnets → Select available
-Public IP → Enabled ✅
- 7. INSTANCE & SCALING
-🔹 Instance
-Type → t2.micro
-🔹 Scaling
-Min → 1
-Max → 2
-🔹 Load Balancer
-Enable → ✅ (recommended)
-✅ 8. REVIEW & CREATE
-Click → Review
-Click → Create
-
-👉 AWS will automatically create:
-
-EC2
-Load Balancer
-Auto Scaling
-Security Groups
-⏳ 9. DEPLOYMENT (WAIT)
-Takes 3–5 minutes
-Status → Green = Success ✅
-🌐 10. ACCESS APPLICATION
-🔹 Steps
-Go to Environment
-Copy URL
-
-👉 Example:
-
-http://myapp-env.eba-xyz.us-east-1.elasticbeanstalk.com
-
-👉 Open in browser → App runs 🎉
+then create ec2
+volumes actions attach volume put ec2
+ec2 connect
+and commands
+lsblk
+sudo mkdir /mnt/shivani
+sudo mount /dev/xvdbf1 /mnt/Shivani
+cd /mnt/shivani
+ls
+you should see f1

@@ -1,0 +1,27 @@
+Ec2
+launch ec2 
+	ubuntu, t2.micro, key pair(.pem),sg ssh-->myIp
+Launch Instance
+
+Open PuttyGen:
+	click load--> all files--> select .pem file
+	-->click open-->click save private key
+	-->save as external-1.ppk
+copy public DNS
+
+Open Putty
+	host name: ubuntu@<DNSIp>
+	connection-->ssh--->auth-->Credentials-->Browse->.ppk-->click open-->terminal opens
+
+>_ click that symbol-->actions->upload .pem->type ssh command
+
+RDP
+instance:
+	AMI-Windows
+	keypair.pem
+	sg->allow RDP traffic from my ip
+	launh instances
+connect->RDP->Get password->upload.pem->decrpty
+
+Windows+R -> mstsc->put public ip->username and password->connect
+SUCCESSSSSSSSSSSSS!!!
