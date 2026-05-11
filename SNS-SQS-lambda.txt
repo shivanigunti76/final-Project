@@ -1,92 +1,59 @@
-lambda-sqs
-import json
+sns-topic-subscription 
 
-def lambda_handler(event, context):
-    for record in event['Records']:
-        print("Message received from SQS:")
-        print(record['body'])
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Message processed successfully')
-    }
-
-------------------------------------------------------
-lambda-s3
-import json
-
-def lambda_handler(event, context):
-    for record in event['Records']:
-        # SQS message body (SNS wraps S3 event inside it)
-        body = json.loads(record['body'])
-
-        # If message comes from SNS
-        if 'Message' in body:
-            message = json.loads(body['Message'])
-        else:
-            message = body
-
-        # Extract S3 event details
-        for rec in message['Records']:
-            bucket = rec['s3']['bucket']['name']
-            key = rec['s3']['object']['key']
-
-            print("Bucket:", bucket)
-            print("File:", key)
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps('S3 event processed from SQS')
-    }
-------------------------------------------------------
-sns-access policy
+SNS
 {
   "Version": "2012-10-17",
-  "Id": "S3-SNS-Policy",
+  "Id": "example-ID",
   "Statement": [
     {
-      "Sid": "AllowS3ToPublishToSNS",
+      "Sid": "ExampleSNSTopicPolicy",
       "Effect": "Allow",
       "Principal": {
         "Service": "s3.amazonaws.com"
       },
       "Action": "SNS:Publish",
-      "Resource": "YOUR_SNS_TOPIC_ARN",
+      "Resource": "arn:aws:sns:us-east-1:383306842631:MyEmailTopic",
       "Condition": {
-        "ArnLike": {
-          "aws:SourceArn": "YOUR_S3_BUCKET_ARN"
-        },
         "StringEquals": {
-          "aws:SourceAccount": "YOUR_ACCOUNT_ID"
+          "aws:SourceAccount": "383306842631"
+        },
+        "ArnLike": {
+          "aws:SourceArn": "arn:aws:s3:::23bd1a052m-2m"
         }
       }
     }
   ]
 }
 
-
-
-
-
----------------------------
-worked sqs code
+SQS
 {
-  "Version": "2012-10-17",
-  "Id": "AllowSNSToSendMessage",
+  "Version": "2008-10-17",
   "Statement": [
     {
-      "Sid": "Allow-SNS-SendMessage",
       "Effect": "Allow",
       "Principal": {
         "Service": "sns.amazonaws.com"
       },
       "Action": "sqs:SendMessage",
-      "Resource": "arn:aws:sqs:us-east-1:640270804884:sqs-internal",
+      "Resource": "arn:aws:sqs:us-east-1:383306842631:MyQueue",
       "Condition": {
         "ArnEquals": {
-          "aws:SourceArn": "arn:aws:sns:us-east-1:640270804884:internal-2"
+          "aws:SourceArn": "arn:aws:sns:us-east-1:383306842631:MyEmailTopic"
         }
       }
     }
   ]
 }
+
+Lambda
+def lambda_handler(event, context):
+
+    for record in event['Records']:
+
+        print("Message received from SQS:")
+        print(record['body'])
+
+    return {
+        'statusCode': 200,
+        'body': 'Message processed successfully'
+    }
