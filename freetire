@@ -1,0 +1,16 @@
+iam roles:
+aws s3 ls
+aws ec2 describe-instances
+• aws s3 ls Works
+• aws ec2 describe-instances Unauthorized (no EC2 permission) 
+iam users:
+ IAM > Users----- Security credentials----Access keys--click create ------select cli--next download csv
+ install AWS CLI Tool from google
+ aws configure
+ Access Key ID
+o Secret Access Key
+o Default region: (e.g., ap-south-1)
+o Default output: json
+aws s3 ls
+Run aws s3 mb s3://your-unique-bucket-name. (Success)
+Run aws iam list-users.
